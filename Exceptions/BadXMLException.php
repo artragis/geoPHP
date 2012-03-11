@@ -3,7 +3,7 @@
 /**
  * extended DOMException to describe some more complex problem in a DOMXML doc.
  * @package geoPHP
- * @author isen
+ * @author artragis
  */
 class BadXMLException extends \DOMException{
     const PARSE_ERROR    = 1;
