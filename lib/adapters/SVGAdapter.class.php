@@ -20,11 +20,42 @@ use danoh_geo\Geometry;
  * @version 1
  */
 class SVGAdapter extends \danoh_geo\Adapter\GeoAdapter{
+    
+    /**
+     *read a svg string and parse it to geometry
+     * @param string $xmlString 
+     * @throws BadXMLException if the xml string is not a valid svg string
+     * @return Geometry
+     */
     public function read($xmlString){
+        $domDoc = new \DOMDocument('1','utf-8');
+        $domDoc = $domDoc->loadXML($xmlString);
+        if(! ($domDoc instanceof \DOMDocument)){
+            throw new \BadXMLException('malformed xml',  \BadXMLException::PARSE_ERROR);
+        }
+        if(!$this->isValidSVG($domDoc)){
+            throw new \BadXMLException('well formed xml but wrong svg',  \BadXMLException::WRONG_TYPE);
+        }
         
     }
-    public function write(Geometry\Geometry $geometry){
+    public function write(Geometry $geometry){
         
+    }
+    
+    private function isValidSVG(\DOMDocument $doc){
+        $authorisedTags = array('title','desc','rect','line','circle','text');
+        $svgTag = $doc->getElementsByTagName('svg');
+        if($svgTag->length !== 1){
+            return false;
+        }else{
+            $children = $svgTag[0]->childNodes;
+            foreach($children as $tags){
+                if(!in_array(strtolower($tags->nodeName),$authorisedTags) ){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 
