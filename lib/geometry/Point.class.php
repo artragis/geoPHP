@@ -109,7 +109,9 @@ class Point extends Geometry
   public function dimension() {
     return 0;
   }
-  
+  public function equal(Point $point){
+      return $this->getX() === $point->getX() && $this->getY() === $point->getY();
+  }
   // Not valid for this geometry type
   public function numGeometries()    { return NULL; }
   public function geometryN($n)      { return NULL; }
